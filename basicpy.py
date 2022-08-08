@@ -1,50 +1,75 @@
-# type for python
-num_int = 1
-num_flaot = 1.2
-name = 'Sean' + ' ' + "Weng"
-list = [num_int,num_flaot,name]
-cell = (num_int,num_flaot)
+from abc import abstractmethod
+class Tut(object):
+    def __init__(self):
+        print("this is basic python language tutorial!!")
 
-# print in console
-print("num_int: "+str(num_int))
-for item in list:
-    print(item)
-print(list)
-print(cell)
+    @abstractmethod
+    def show(self):
+        pass
 
-# function
-def add(num_int, num_float):
-    return num_int+num_float
+class IntTut(Tut):
+    def __init__(self):
+        self.numi = 2
+        self.numf = 3.14
 
-# loop
-num_str = ''
-for it in range(0,10):
-    num_str += str(it)
-print(num_str)
-for index in range(len(num_str)):
-    if (index<1):
-        print(num_str[index])
-while (num_int < 5):
-    num_int+=1
+    def show(self):
+        tips = "A Integer Num: "+str(self.numi)
+        print(tips)
+        tips = "A Float Num: "+str(self.numf)
+        print(tips)
+        tips = "do some calculation, like multiple: "+str(self.numi*self.numf)
+        print(tips)
 
-#condition
-if (num_int>=5 and num_flaot<5):
-    print (num_int)
+class StringTut(Tut):
+    def __init__(self):
+        self.fname = 'Weng'
+        self.lname = 'Xisong'
 
-# dictionary
-index = {'name':"Sean Weng", 'gender':'','age':101}
-print(index['name'])
-print(index.keys())
-index['gender'] = 'unknown'
-print(index.values())
+    def show(self):
+        tips = "my first name is "+self.fname
+        print(tips)
+        tips = "I'm "+self.fname+' '+self.lname
+        print(tips)
 
-# candy
-listA = []
-listB = [1,2]
-listA+=listB
-print(listA)
-print(listA[-1])
-print([x for x in listA])
+class ListTut(Tut):
+    def __init__(self):
+        self.list = [1]
+
+    def show(self):
+        tips = 'list A:'
+        print(tips)
+        print(self.list)
+        self.list = [2, self.list]
+        self.list.append(1)
+        print(tips)
+        print(self.list)
+        self.list.pop()
+        print(tips)
+        print(self.list)
+        self.list = list(range(5))
+        tips = 'list B[:]: '
+        print(tips)
+        print(self.list)
+        tips = 'list B[1:-2]'
+        print(tips)
+        print(self.list[1:-2])
+        tips = "[1:-2] is actually [2, -2)"
+        print(tips)
+
+class DicTut(Tut):
+    def __init__(self):
+        self.dict = {'1':1}
+
+    def show(self):
+        tips = ''
+
+def enter(tut):
+    tut.show()
+
+welcome = Tut()
+intTut = IntTut()
+strTut = StringTut()
+listTut = ListTut()
 
 if __name__ == "__main__":
-    print("this is basic python language tutorial!!")
+    enter(listTut)
