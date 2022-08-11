@@ -61,7 +61,49 @@ class DicTut(Tut):
         self.dict = {'1':1}
 
     def show(self):
-        tips = ''
+        tips = 'a dictionary is like: '
+        print(tips)
+        print(self.dict)
+        tips = "we can search by key, such as dict['1']"
+        print(tips)
+        print(self.dict['1'])
+        tips = 'we can print all keys'
+        print(tips)
+        print(self.dict.keys())
+        tips = 'or values'
+        print(tips)
+        print(self.dict.values())
+        tips = "add a set of values, such as dict['2']=2 "
+        self.dict['2'] = 2
+        print(tips)
+        print(self.dict)
+        tips = "delete a set of values, such as dict.pop('2')"
+        self.dict.pop('2')
+        print(tips)
+        print(self.dict)
+        tips = "Actually, we can also change list or tuple into dict, such as dict=[('1',1),('2',2)]"
+        self.dict = [('1',1),('2',2)]
+        print(tips)
+        print(self.dict)
+
+class MapTut(Tut):
+    def __init__(self):
+        self.map = {1,'a',1,2}
+
+    def show(self):
+        tips = 'a map or set is like'
+        print(tips)
+        print(self.map)
+        tips = 'it is actually a set, which means a set of {1,2,2,1} will be'
+        print(tips)
+        print({1,2,2,1})
+        tips = 'use discard to remove a value, remove is also ok but it may leads to error'
+        print(tips)
+        tips = 'update a value by map.update([3])'
+        print(tips)
+        self.map.update([3])
+        print(self.map)
+
 
 def enter(tut):
     tut.show()
@@ -70,6 +112,8 @@ welcome = Tut()
 intTut = IntTut()
 strTut = StringTut()
 listTut = ListTut()
+dicTut = DicTut()
+mapTut = MapTut()
 
 if __name__ == "__main__":
-    enter(listTut)
+    enter(mapTut)
