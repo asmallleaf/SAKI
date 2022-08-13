@@ -116,4 +116,8 @@ dicTut = DicTut()
 mapTut = MapTut()
 
 if __name__ == "__main__":
-    enter(mapTut)
+    #enter(mapTut)
+    list = [1,2,3]
+    b = []
+    b+=list
+    print(b)
