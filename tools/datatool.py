@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
+import matplotlib.pyplot as mpl
 
 class ExcelData():
     def __init__(self):
@@ -168,17 +168,50 @@ class ExcelData():
         return header
 
     def collect(self,rowIndex=None,colIndex=None,rowList=None,colList=None):
+        rowNum = len(rowList)
+        colNum = len(colList)
+        rowi = 0
+        coli = 0
+        data = np.zeros((rowNum,colNum))
         for col in colList:
             for row in rowList:
-                
-        collection = pd.DataFrame(index=rowIndex,columns=colIndex)
+                data[rowi][coli]=self.getCell(row,col)
+                rowi+=1
+            rowi = 0
+            coli+=1
+        collection = pd.DataFrame(data=data,index=rowIndex,columns=colIndex)
+        return collection
 class DrawData():
     def __init__(self):
         self.data = None
-        self.headers = None
+        self.title = None
         self.labels = None
-    def make(self,data,rowIndex=None,colIndex=None):
-        self.data = pd.DataFrame(data=data,index=rowIndex,columns=colIndex)
+        self.typeList = {'线形图':'line','柱状图':'bar','水平柱状图':'barh','组合柱状图':'bar','堆叠柱状图':'bar','饼图':'pie','散点图':'scatter','直方图':'hist','箱体图':'box','面积图':'area'}
+        self.kind = 'line'
+        self.__rcSet__()
+
+    def show(self,data=None,kind='线形图'):
+        if self.__typeMap__(kind) is None:
+            print('the graph type is not found')
+            return None
+        data.plot(kind=self.kind)
+        mpl.show()
+
+    def __rcSet__(self):
+        mpl.rc('font',family='Youyuan',size=11)
+        mpl.rc('axes',unicode_minus='False')
+
+    def __typeMap__(self,typeStr=None):
+        if typeStr is None:
+            return None
+        if isinstance(typeStr,str):
+            if typeStr in self.typeList.keys():
+                self.kind = self.typeList[typeStr]
+                return self.kind
+            else:
+                return None
+        else:
+            return None
 
 if __name__ == '__main__':
     path = r"../testdata/data.xlsx"
@@ -186,4 +219,6 @@ if __name__ == '__main__':
     draw = DrawData()
     excel.read(path)
     header = excel.makeHeader(rowList=[0])
-    print(excel.values[1:2])
+    td = excel.collect(colIndex=header,rowList=list(range(1,10)),colList=list(range(0,4)))
+    print(td.values)
+    draw.show(td)
