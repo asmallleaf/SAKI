@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as mpl
+import openpyxl as opl
+import xlsxwriter
 
 class ExcelData():
     def __init__(self):
@@ -14,6 +16,7 @@ class ExcelData():
         self.row = None
         self.rowNum = 0
         self.colNum = 0
+        self.sheetName = None
 
     def read(self,path=None):
         try:
@@ -49,6 +52,7 @@ class ExcelData():
                     print('sheet name not exist')
                     return None
                 self.sheet = sheets[sheetName]
+                self.sheetName = sheetName
                 return self.sheet
             elif isinstance(sheetName,int):
                 if sheetName>self.sheetNum or sheetName<0:
@@ -57,11 +61,12 @@ class ExcelData():
                 else:
                     index = self.sheetNameList[sheetName]
                     self.sheet = self.sheets[index]
+                    self.sheetName = self.sheetNameList[sheetName]
                     return self.sheet
         else:
             return None
 
-    def set(self,sheet=None,row=None,col=None):
+    def __set__(self,sheet=None,row=None,col=None):
         if sheet is not None:
             self.sheet = sheet
         if row is not None:
@@ -181,6 +186,20 @@ class ExcelData():
             coli+=1
         collection = pd.DataFrame(data=data,index=rowIndex,columns=colIndex)
         return collection
+
+    def setCell(self,rowIndex=None,colIndex=None,val=None):
+        #isTrue = self.__checkRange__(rowIndex,colIndex)
+        #if isTrue is False:
+        #    return None
+        #elif (isTrue==2):
+        #    colIndex = self.__strIndex2Int__(colIndex)
+        self.sheet.values[rowIndex,colIndex] = val
+    def makeExcel(self,path=None):
+        if path is None:
+            path = self.path
+        with pd.ExcelWriter(path,engine='xlsxwriter') as writer:
+            self.sheet.to_excel(writer,sheet_name=self.sheetName,index=False,header=False)
+
 class DrawData():
     def __init__(self):
         self.data = None
@@ -214,11 +233,15 @@ class DrawData():
             return None
 
 if __name__ == '__main__':
-    path = r"../testdata/data.xlsx"
+    path = r"../testdata/test.xlsx"
     excel = ExcelData()
     draw = DrawData()
     excel.read(path)
-    header = excel.makeHeader(rowList=[0])
-    td = excel.collect(colIndex=header,rowList=list(range(1,10)),colList=list(range(0,4)))
-    print(td.values)
-    draw.show(td)
+    #header = excel.makeHeader(rowList=[0])
+    #td = excel.collect(colIndex=header,rowList=list(range(1,10)),colList=list(range(0,4)))
+    #print(td.values)
+    #draw.show(td)
+
+    excel.getSheet('Sheet1')
+    excel.setCell(1,1,0)
+    excel.makeExcel()
