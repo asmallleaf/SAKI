@@ -1,5 +1,6 @@
 import openpyxl as opx
 from openpyxl.styles import PatternFill,Alignment,Border,Font,Side
+from openpyxl import cell as Cell
 
 class XlsxTool():
     def __init__(self):
@@ -34,6 +35,18 @@ class XlsxTool():
                 self.wb.save(path)
             else:
                 self.wb.save(path)
+
+    def extract(self,cells):
+        list = []
+        for cell in cells:
+            if isinstance(cell, Cell.MergedCell):
+                for mergedRange in self.sheet.merged_cell_ranges:
+                    if cell.coordinate in mergedRange:
+                        cell = self.sheet.cell(row=mergedRange.min_row,column=mergedRange.min_col)
+                        break
+            if cell.value is not None:
+                list.append(cell.value)
+        return list
 
     def applyCells(self,start,end,filter):
         if end is None:
@@ -159,16 +172,22 @@ class XlsxTool():
 
 if __name__ == '__main__':
     xt = XlsxTool()
-    path = r'../testdata/travel-budget.xlsx'
-    xt.read(path)
-    print(xt.sheetNum)
-    xt.selectSheet("test2")
-    print(xt.sheet['A1'].value)
-    xt.sheet['A1']=3
-    xt.decorate(start='A1',end='A4',fill=xt.getColor('red'),border=xt.getBorder('normal'),align='center',font=xt.getFont('PATAC_Bold'))
-    xt.merge('F9','G9')
-    xt.resize(rows=[1],height=16,cols=['A'],width=10)
-    xt.selectSheet('Travel Budget')
-    xt.sheet['B1'].value = 0
+    # path = r'../testdata/travel-budget.xlsx'
+    # xt.read(path)
+    # print(xt.sheetNum)
+    # xt.selectSheet("test2")
+    # print(xt.sheet['A1'].value)
+    # xt.sheet['A1']=3
+    # xt.decorate(start='A1',end='A4',fill=xt.getColor('red'),border=xt.getBorder('normal'),align='center',font=xt.getFont('PATAC_Bold'))
+    # xt.merge('F9','G9')
+    # xt.resize(rows=[1],height=16,cols=['A'],width=10)
+    # xt.selectSheet('Travel Budget')
+    # xt.sheet['B1'].value = 0
+    # path = r'../testdata/test2.xlsx'
+    # xt.save(path)
     path = r'../testdata/test2.xlsx'
-    xt.save(path)
+    xt.read(path)
+    xt.selectSheet('test2')
+    list = xt.extract(xt.sheet['E'])
+    for cell in list:
+        print(cell)
